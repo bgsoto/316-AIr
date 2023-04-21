@@ -17,7 +17,7 @@ public class PlayerNavMesh : MonoBehaviour
     private void Awake()
     {
        
-       agent1 =  GetComponent <NavMeshAgent>();
+       agent1 = GetComponent <NavMeshAgent>();
 
     }
 
