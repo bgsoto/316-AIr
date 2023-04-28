@@ -6,6 +6,8 @@ TagManager:
   tags:
   - REDTARGET
   - GREENTARGET
+  - enemy
+  - goal
   layers:
   - Default
   - TransparentFX

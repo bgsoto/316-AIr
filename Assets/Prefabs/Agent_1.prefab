@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5644243841605180107}
   - component: {fileID: 9017593688831899742}
   - component: {fileID: 353057324683494960}
+  - component: {fileID: 4625852217136605495}
   m_Layer: 0
   m_Name: Agent_1
   m_TagString: Untagged
@@ -137,6 +138,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movePositionTransform: {fileID: 0}
+  NxtGoal: {fileID: 0}
+--- !u!135 &4625852217136605495
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2976380974901565399}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5726529345764844369
 GameObject:
   m_ObjectHideFlags: 0
