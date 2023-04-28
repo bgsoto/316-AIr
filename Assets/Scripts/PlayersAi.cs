@@ -5,10 +5,10 @@ using UnityEngine;
 using UnityEngine.AI;
 
 
-public class PlayerAI : MonoBehaviour
+public class PlayersAI : MonoBehaviour
 {
 
-    
+
     // States
     public enum State
     {
@@ -25,6 +25,10 @@ public class PlayerAI : MonoBehaviour
     public int currentPatrolPoint = 0;
     public GameObject EnemyPos;
     public GameObject bulletPrefab;
+    [SerializeField] private bool detected;
+    [SerializeField] private GameObject NxtGoal;
+    private NavMeshAgent agent1;
+
 
     // The force to apply to the bullet
     public float bulletForce = 1000f;
@@ -36,13 +40,27 @@ public class PlayerAI : MonoBehaviour
     {
         // Set initial state
         currentState = State.Idle;
-       // InvokeRepeating("Shoot", 0f, fireRate);
+        detected = false;
+        agent1 = GetComponent<NavMeshAgent>();
+        // InvokeRepeating("Shoot", 0f, fireRate);
+    }
+
+     void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("enemy"))
+        {
+            
+            detected = true;
+
+        }
+
     }
 
     void Update()
     {
         // State machine
-        switch (currentState)
+        switch (currentState) 
+
         {
             case State.Idle:
                 Idle();
@@ -53,7 +71,9 @@ public class PlayerAI : MonoBehaviour
             case State.Attack:
                 Attack();
                 break;
+
         }
+        Debug.Log(currentState);
     }
 
     void Idle()
@@ -63,37 +83,31 @@ public class PlayerAI : MonoBehaviour
 
         // Check for nearby enemies
         
-        if (/* check for enemies */ )
-        {
-            // Switch to attack state
-            currentState = State.Attack;
-        }
-        else
-        {
-            // Switch to patrol state
-            currentState = State.Patrol;
-        }
+
+            if (detected == true)
+            {
+                // Switch to attack state
+                currentState = State.Attack;
+            }
+            else
+            {
+                // Switch to patrol state
+                currentState = State.Patrol;
+            }
+
+
+
+        
     }
 
     void Patrol()
     {
-        // Move towards next patrol point
-        transform.position = Vector3.MoveTowards(transform.position, patrolPoints[currentPatrolPoint].position, moveSpeed * Time.deltaTime);
+        agent1.destination = NxtGoal.transform.position;
 
-        // Rotate towards next patrol point
-        Vector3 direction = patrolPoints[currentPatrolPoint].position - transform.position;
-        Quaternion rotation = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
-
-        // Check if at patrol point
-        if (transform.position == patrolPoints[currentPatrolPoint].position)
-        {
-            // Move to next patrol point
-            currentPatrolPoint = (currentPatrolPoint + 1) % patrolPoints.Length;
-        }
+        
 
         // Check for nearby enemies
-        if (/* check for enemies */)
+        if (detected == true)
         {
             // Switch to attack state
             currentState = State.Attack;
@@ -106,7 +120,7 @@ public class PlayerAI : MonoBehaviour
        // transform.position = Vector3.MoveTowards(transform.position, /* enemy position */EnemyPos.transform.position  , moveSpeed * Time.deltaTime);
 
         // Rotate towards enemy
-        Vector3 direction = EnemyPos.transform.position = /* enemy position */ -transform.position;
+        Vector3 direction = EnemyPos.transform.position = /* enemy position */EnemyPos.transform.position - transform.position;
         Quaternion rotation = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
 
@@ -116,7 +130,7 @@ public class PlayerAI : MonoBehaviour
         // Check if enemy is dead
         if (EnemyPos != null)
         {
-            // Switch to idle state
+            detected = false;
             currentState = State.Idle;
         }
     }
@@ -132,6 +146,8 @@ public class PlayerAI : MonoBehaviour
         // Add a force to the bullet
         rb.AddForce(transform.forward * bulletForce);
     }
+
+   
 }
 
 
