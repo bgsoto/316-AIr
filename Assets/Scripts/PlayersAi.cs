@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
 
-public class States : MonoBehaviour
+public class PlayerAI : MonoBehaviour
 {
 
     
@@ -23,11 +24,19 @@ public class States : MonoBehaviour
     public Transform[] patrolPoints;
     public int currentPatrolPoint = 0;
     public GameObject EnemyPos;
+    public GameObject bulletPrefab;
+
+    // The force to apply to the bullet
+    public float bulletForce = 1000f;
+
+    // The rate at which to shoot bullets (in seconds)
+    public float fireRate = 1f;
 
     void Start()
     {
         // Set initial state
         currentState = State.Idle;
+       // InvokeRepeating("Shoot", 0f, fireRate);
     }
 
     void Update()
@@ -53,7 +62,8 @@ public class States : MonoBehaviour
         Debug.Log("Idle");
 
         // Check for nearby enemies
-        if (/* check for enemies */ collision)
+        
+        if (/* check for enemies */ )
         {
             // Switch to attack state
             currentState = State.Attack;
@@ -96,12 +106,12 @@ public class States : MonoBehaviour
        // transform.position = Vector3.MoveTowards(transform.position, /* enemy position */EnemyPos.transform.position  , moveSpeed * Time.deltaTime);
 
         // Rotate towards enemy
-        Vector3 direction = /* enemy position */ -transform.position;
+        Vector3 direction = EnemyPos.transform.position = /* enemy position */ -transform.position;
         Quaternion rotation = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
 
         //shoot enemy
-
+        InvokeRepeating("Shoot", 0f, fireRate);
 
         // Check if enemy is dead
         if (EnemyPos != null)
@@ -110,5 +120,18 @@ public class States : MonoBehaviour
             currentState = State.Idle;
         }
     }
+    // Method to shoot a bullet
+    void Shoot()
+    {
+        // Instantiate a new bullet
+        GameObject bullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
+
+        // Get the rigidbody component of the bullet
+        Rigidbody rb = bullet.GetComponent<Rigidbody>();
+
+        // Add a force to the bullet
+        rb.AddForce(transform.forward * bulletForce);
+    }
 }
+
 
